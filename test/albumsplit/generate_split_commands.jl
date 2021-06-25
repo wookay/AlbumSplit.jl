@@ -1,7 +1,7 @@
 module test_albumsplit_generate_split_commands
 
 using Test
-using AlbumSplit
+using AlbumSplit # generate_split_commands
 using Dates
 
 filepath = "거북이 노래 모음-SIcHPs-Qszc.mp3"
@@ -14,6 +14,9 @@ tracks = """
 """
 cmds = AlbumSplit.get_split_commands(filepath, artist, tracks; duration)
 @test first(cmds) == """ffmpeg -i "거북이 노래 모음-SIcHPs-Qszc.mp3" -ss 00:00:01 -to 00:03:09.999 "거북이 - 1 빙고.mp3\""""
+
+generate_split_commands(filepath, artist, tracks; duration)
+
 
 many_tracks = """
 0:00:01   빙고
@@ -59,6 +62,5 @@ many_tracks = """
 """
 cmds = AlbumSplit.get_split_commands(filepath, artist, many_tracks; duration)
 @test first(cmds) == """ffmpeg -i "거북이 노래 모음-SIcHPs-Qszc.mp3" -ss 00:00:01 -to 00:03:09.999 "거북이 - 01 빙고.mp3\""""
-
 
 end # module test_albumsplit_generate_split_commands
