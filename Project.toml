@@ -1,0 +1,19 @@
+name = "AlbumSplit"
+uuid = "27196ee2-b9cc-4281-b13e-073f4659d0ef"
+authors = ["WooKyoung Noh <wookay.noh@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+FFMPEG = "c87230d0-a227-11e9-1b43-d7ebe4e7570a"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+
+[compat]
+julia = "1"
+FFMPEG = "0.4"
+
+[extras]
+Jive = "ba5e3d4b-8524-549f-bc71-e76ad9e9deed"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test", "Jive"]
