@@ -79,8 +79,8 @@ function get_split_commands(filepath::String, artist::String, trackstr::String; 
     cmds
 end
 
-function generate_split_commands(filepath::String, artist::String, trackstr::String; duration::Union{Nothing, Time} = nothing, file_extension=".mp3")
-    println.(get_split_commands(filepath, artist, trackstr; duration, file_extension))
+function generate_split_commands(args...; kwargs...)
+    println.(get_split_commands(args...; kwargs...))
 end
 
 # module AlbumSplit
