@@ -10,21 +10,29 @@ struct Track
 end
 
 function parse_time_title(line::String)::Union{Nothing, Tuple{Time, String}}
-    regex_hms = r"([\d]{1,2}:[\d]{2}:[\d]{2})[\s]*(.*)"
-    regex_ms  =         r"([\d]{1,2}:[\d]{2})[\s]*(.*)"
-    m_hms = match(regex_hms, line)
-    if m_hms isa RegexMatch
-        t = parse(Time, m_hms[1])
-        return (t, rstrip(m_hms[2]))
-    else
-        m_ms = match(regex_ms, line)
-        if m_ms isa RegexMatch
-            t = parse(Time, string("00:", m_ms[1]))
-            return (t, rstrip(m_ms[2]))
-        else
-            return nothing
+    regex_hms2 = r"(?<lhs>.*)(?<time>([\d]{2}:[\d]{2}:[\d]{2}))(?<rhs>.*)"
+    regex_ms2  = r"(?<lhs>.*)(?<time>([\d]{2}:[\d]{2}))(?<rhs>.*)"
+    regex_hms1 = r"(?<lhs>.*)(?<time>([\d]{1}:[\d]{2}:[\d]{2}))(?<rhs>.*)"
+    regex_ms1  = r"(?<lhs>.*)(?<time>([\d]{1}:[\d]{2}))(?<rhs>.*)"
+    for regex in (regex_hms2, regex_ms2, regex_hms1, regex_ms1)
+        m = match(regex, line)
+        if m isa RegexMatch
+            if !isempty(m[:lhs]) && isempty(m[:rhs])
+                title = rstrip(m[:lhs])
+            else
+                title = lstrip(m[:rhs])
+            end
+            if regex === regex_ms2
+                t = parse(Time, string("00:", m[:time]))
+            elseif regex === regex_ms1
+                t = parse(Time, string("00:0", m[:time]))
+            else
+                t = parse(Time, m.time)
+            end
+            return (t, title)
         end
     end
+    return nothing
 end
 
 function get_artist_title(artist::String, title::String)::String
