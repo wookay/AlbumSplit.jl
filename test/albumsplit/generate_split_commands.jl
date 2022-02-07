@@ -58,4 +58,6 @@ track_text = """
 tracks = AlbumSplit.make_tracks(Time(0, 9, 15), "Nirvana", track_text)
 @test length(tracks) == 2
 
+@test AlbumSplit.timeparse("1:13:27.248980") == Time(1, 13, 27, 248, 980)
+
 end # module test_albumsplit_generate_split_commands

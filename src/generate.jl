@@ -68,10 +68,23 @@ function make_tracks(duration::Time, artist::String, trackstr::String)::Vector{T
     end
 end
 
+function timeparse(str)
+    dot = findfirst('.', str)
+    if dot !== nothing
+        rest = str[dot+1:end]
+        len = length(rest)
+        if len >= 4
+            (us, _) = Dates.tryparsenext_base10(rest, 4, len, 1, 3)
+            return parse(Time, str[1:dot+3]) + Microsecond(us)
+        end
+    end
+    parse(Time, str)
+end
+
 function get_duration(filepath::String)::Time
     cmd = `-v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 -sexagesimal "$filepath"`
     (duration,) = FFMPEG.exe(cmd, command=FFMPEG.ffprobe, collect=true)
-    parse(Time, duration)
+    timeparse(duration)
 end
 
 function get_split_commands(filepath::String, artist::String, trackstr::String; duration::Union{Nothing, Time} = nothing, file_extension=".mp3")::Vector{String}
