@@ -35,7 +35,18 @@ function parse_time_title(line::String)::Union{Nothing, Tuple{Time, String}}
     return nothing
 end
 
+function get_track_title(idx, len, old_title)
+    idx_dot_space = string(idx, ". ")
+    if startswith(old_title, idx_dot_space)
+        title = old_title[length(idx_dot_space)+1:end]
+    else
+        title = old_title
+    end
+    string(lpad(idx, ndigits(len), '0'), " ", title)
+end
+
 function get_artist_title(artist::String, title::String)::String
+    isempty(artist) ? title : string(artist, " - ", title)
 end
 
 function make_tracks(duration::Time, artist::String, trackstr::String)::Vector{Track}
@@ -50,7 +61,7 @@ function make_tracks(duration::Time, artist::String, trackstr::String)::Vector{T
     elseif isone(len)
         (start_timestamp, title) = first(list)
         end_timestamp = duration
-        artist_title = string(artist, " - ", title)
+        artist_title = get_artist_title(artist, title)
         return [Track(artist_title, start_timestamp, end_timestamp)]
     else
         last_idx = lastindex(list)
@@ -61,7 +72,7 @@ function make_tracks(duration::Time, artist::String, trackstr::String)::Vector{T
             else
                end_timestamp = first(list[idx + 1]) - Millisecond(1)
             end
-            artist_num_title = string(artist, " - ", lpad(idx, ndigits(len), '0'), " ", title)
+            artist_num_title = get_artist_title(artist, get_track_title(idx, len, title))
             push!(tracks, Track(artist_num_title, start_timestamp, end_timestamp))
         end
         return tracks
