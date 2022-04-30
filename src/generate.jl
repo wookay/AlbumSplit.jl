@@ -100,7 +100,11 @@ end
 
 function get_split_commands(filepath::String, artist::String, trackstr::String; duration::Union{Nothing, Time} = nothing, file_extension=".mp3")::Vector{String}
     if isnothing(duration)
-        duration::Time = get_duration(filepath)
+        if isfile(filepath)
+            duration::Time = get_duration(filepath)
+        else
+            throw(ArgumentError("no such file: $filepath"))
+        end
     end
     cmds = Vector{String}()
     for track in make_tracks(duration, artist, trackstr)
