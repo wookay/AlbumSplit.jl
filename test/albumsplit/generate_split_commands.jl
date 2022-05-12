@@ -60,4 +60,7 @@ tracks = AlbumSplit.make_tracks(Time(0, 9, 15), "Nirvana", track_text)
 
 @test AlbumSplit.timeparse("1:13:27.248980") == Time(1, 13, 27, 248, 980)
 
+@test AlbumSplit.get_track_title(1, 10, "1. title") == "01 title"
+@test AlbumSplit.get_track_title(1, 10, "1 title") == "01 title"
+
 end # module test_albumsplit_generate_split_commands
