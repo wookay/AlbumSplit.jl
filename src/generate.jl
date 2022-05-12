@@ -27,7 +27,7 @@ function parse_time_title(line::String)::Union{Nothing, Tuple{Time, String}}
             elseif regex === regex_ms1
                 t = parse(Time, string("00:0", m[:time]))
             else
-                t = parse(Time, m.time)
+                t = parse(Time, m[:time])
             end
             return (t, title)
         end
