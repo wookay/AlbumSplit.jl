@@ -37,15 +37,19 @@ end
 
 function get_track_title(idx, len, old_title)
     idx_dot_space = string(idx, ". ")
-    idx_space = string(idx, " ")
+    idx_zerolpad = lpad(idx, ndigits(len), '0')
+    idx_zerolpad_space =  string(idx_zerolpad, ' ')
+    idx_space = string(idx, ' ')
     if startswith(old_title, idx_dot_space)
         title = old_title[length(idx_dot_space)+1:end]
+    elseif startswith(old_title, idx_zerolpad_space)
+        title = old_title[length(idx_zerolpad_space)+1:end]
     elseif startswith(old_title, idx_space)
         title = old_title[length(idx_space)+1:end]
     else
         title = old_title
     end
-    string(lpad(idx, ndigits(len), '0'), " ", title)
+    string(idx_zerolpad, ' ', title)
 end
 
 function get_artist_title(artist::String, title::String)::String
